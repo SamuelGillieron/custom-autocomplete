@@ -1,15 +1,10 @@
 <p>autocomplete works!</p>
 
-<form>
-  <input autocomplete="off" id="autocomplete_id" placeholder="{{placeholder}}" type="text" #autocompleteInput>
-  @if(filteredInput$ | async; as input){
-    <div class="card">
-      <div class="search">
-        <div *ngFor="let i of input;" (click)="inputSelected(i)" class="search-result">
-          {{i.strDrink}}
-        </div>
-      </div>
-    </div>
-  }
+  <input [formControl]="inputControl" autocomplete="off" placeholder="{{placeholder}}" type="text" list="autocomplete_options">
 
-</form>
+  @if(filteredInput$ | async; as input){
+      <ul class="search" id="autocomplete_options" >
+        <li *ngFor="let i of input;" (click)="inputSelected(i)"> {{i.strDrink}}
+        </li>
+      </ul>
+  }

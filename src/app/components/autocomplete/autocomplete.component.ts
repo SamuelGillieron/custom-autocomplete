@@ -1,8 +1,8 @@
-import {AfterViewInit, Component, ElementRef, Input, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {CocktailServiceService} from '../../shared/services/cocktail-service.service';
-import {debounce, debounceTime, fromEvent, Observable, switchMap, tap} from 'rxjs';
+import {debounceTime, fromEvent, Observable, switchMap, tap} from 'rxjs';
 import {Cocktail} from '../../shared/models/cocktail';
-import {FormsModule} from '@angular/forms';
+import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AsyncPipe, NgForOf} from '@angular/common';
 
 @Component({
@@ -11,35 +11,36 @@ import {AsyncPipe, NgForOf} from '@angular/common';
   imports: [
     FormsModule,
     AsyncPipe,
-    NgForOf
+    NgForOf,
+    ReactiveFormsModule
   ],
   templateUrl: './autocomplete.component.html',
   styleUrl: './autocomplete.component.scss'
 })
-export class AutocompleteComponent implements AfterViewInit{
+export class AutocompleteComponent{
 
   @Input()
   placeholder : string = 'Search'
-
-  @ViewChild('autocompleteInput')
-  input: ElementRef = null!
   filteredInput$: Observable<Cocktail[]> = null!;
-  inputValue: string = '';
+  inputControl: FormControl;
+
+  @Output()
+  selected = new EventEmitter<Cocktail>;
 
 
   constructor(private cocktailService : CocktailServiceService) {
+    this.inputControl = new FormControl('')
+    this.filteredInput$ = this.inputControl.valueChanges.pipe(
+      debounceTime(300),
+      tap(e => console.log(e)),
+      switchMap(e => this.cocktailService.searchCocktail(e))
+    )
   }
-
-  ngAfterViewInit(): void {
-        this.filteredInput$ = fromEvent(this.input.nativeElement, 'keyup').pipe(
-          tap(e => console.log((e as any).target.value)),
-          debounceTime(300),
-          switchMap(e => this.cocktailService.searchCocktail((e as any).target.value))
-        )
-    }
-
 
   inputSelected(i : Cocktail) {
     console.log(i.strDrink)
+    this.selected.emit(i)
+
   }
+
 }
