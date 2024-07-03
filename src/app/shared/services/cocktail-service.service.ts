@@ -24,7 +24,6 @@ export class CocktailServiceService {
 
     return this.httpClient.get(this.baseApiUrl + "search.php", options)
       .pipe(
-        tap(json => console.log(json)),
         map((response : any) => {
           return alphabetical(response.drinks, (d: Cocktail) => d.strDrink).slice(0,this.searchLimit)
         })

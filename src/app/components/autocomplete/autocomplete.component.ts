@@ -1,9 +1,9 @@
-import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {CocktailServiceService} from '../../shared/services/cocktail-service.service';
-import {combineLatestWith, debounceTime, fromEvent, merge, Observable, Subject, switchMap, tap} from 'rxjs';
+import {debounceTime, merge, Observable, Subject, switchMap} from 'rxjs';
 import {Cocktail} from '../../shared/models/cocktail';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {AsyncPipe, NgForOf} from '@angular/common';
+import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-autocomplete',
@@ -12,7 +12,8 @@ import {AsyncPipe, NgForOf} from '@angular/common';
     FormsModule,
     AsyncPipe,
     NgForOf,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgIf
   ],
   templateUrl: './autocomplete.component.html',
   styleUrl: './autocomplete.component.scss'
@@ -35,9 +36,7 @@ export class AutocompleteComponent{
     const internalInputs$ = this.internalInputs.asObservable()
     const inputChanges$ =this.inputControl.valueChanges.pipe(debounceTime(300),
       switchMap(e => this.cocktailService.searchCocktail(e)));
-    this.filteredInput$ = merge(internalInputs$,inputChanges$).pipe(
-      tap(e => console.log(e)),
-    )
+    this.filteredInput$ = merge(internalInputs$,inputChanges$)
   }
 
   inputSelected(i : Cocktail) {
@@ -47,8 +46,6 @@ export class AutocompleteComponent{
   }
 
   moveFocus(e: any, item: Cocktail) {
-    console.log("EVENT", e)
-    console.log("Item", item)
     switch(e.key){
       case "Enter":
         this.inputSelected(item)

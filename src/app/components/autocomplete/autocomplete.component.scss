@@ -1,3 +1,16 @@
 li:focus{
   font-weight: bold;
 }
+
+
+div{
+  position: relative;
+}
+
+ul{
+  position: absolute;
+  background-color: white;
+  padding: 8px;
+  box-shadow: 0px 0px 2px;
+  list-style-type: none;
+}

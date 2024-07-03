@@ -1,10 +1,13 @@
-<input tabindex="0" [formControl]="inputControl" autocomplete="off" placeholder="{{placeholder}}" type="text" list="autocomplete_options">
+<div>
+  <input tabindex="0" [formControl]="inputControl" autocomplete="off" placeholder="{{placeholder}}" type="text">
   @if(filteredInput$ | async; as input){
-      <ul class="search" id="autocomplete_options" >
-        @for (item of input; track item; let  i = $index) {
+      <ul *ngIf="input.length > 0">
+        @for (item of input; track item;) {
           <li [tabindex]="0" (click)="inputSelected(item)" (keydown)="moveFocus($event, item)">
-            {{i+1}} {{item.strDrink}}
+            {{item.strDrink}}
           </li>
         }
       </ul>
   }
+</div>
+
