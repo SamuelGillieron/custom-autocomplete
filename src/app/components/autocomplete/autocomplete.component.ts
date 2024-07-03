@@ -3,12 +3,15 @@ import {CocktailServiceService} from '../../shared/services/cocktail-service.ser
 import {debounce, debounceTime, fromEvent, Observable, switchMap, tap} from 'rxjs';
 import {Cocktail} from '../../shared/models/cocktail';
 import {FormsModule} from '@angular/forms';
+import {AsyncPipe, NgForOf} from '@angular/common';
 
 @Component({
   selector: 'app-autocomplete',
   standalone: true,
   imports: [
-    FormsModule
+    FormsModule,
+    AsyncPipe,
+    NgForOf
   ],
   templateUrl: './autocomplete.component.html',
   styleUrl: './autocomplete.component.scss'
@@ -33,13 +36,10 @@ export class AutocompleteComponent implements AfterViewInit{
           debounceTime(300),
           switchMap(e => this.cocktailService.searchCocktail((e as any).target.value))
         )
-
-    this.filteredInput$.subscribe(cocktail =>  {
-      console.log(cocktail)
-      if(cocktail)
-        console.log("DrinkName",cocktail.map(c => c.strDrink))
-    })
     }
 
 
+  inputSelected(i : Cocktail) {
+    console.log(i.strDrink)
+  }
 }

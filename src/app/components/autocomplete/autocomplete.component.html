@@ -2,4 +2,14 @@
 
 <form>
   <input autocomplete="off" id="autocomplete_id" placeholder="{{placeholder}}" type="text" #autocompleteInput>
+  @if(filteredInput$ | async; as input){
+    <div class="card">
+      <div class="search">
+        <div *ngFor="let i of input;" (click)="inputSelected(i)" class="search-result">
+          {{i.strDrink}}
+        </div>
+      </div>
+    </div>
+  }
+
 </form>
