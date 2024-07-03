@@ -4,6 +4,7 @@ import {debounceTime, merge, Observable, Subject, switchMap} from 'rxjs';
 import {Cocktail} from '../../shared/models/cocktail';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
+import {HighlightTextPipe} from '../../shared/pipes/highlight-text.pipe';
 
 @Component({
   selector: 'app-autocomplete',
@@ -13,12 +14,16 @@ import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
     AsyncPipe,
     NgForOf,
     ReactiveFormsModule,
-    NgIf
+    NgIf,
+    HighlightTextPipe
   ],
   templateUrl: './autocomplete.component.html',
   styleUrl: './autocomplete.component.scss'
 })
 export class AutocompleteComponent{
+  get textInput() : string{
+    return this.inputControl.value;
+  }
 
   @Input()
   placeholder : string = 'Search'

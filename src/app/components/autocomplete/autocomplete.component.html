@@ -3,8 +3,7 @@
   @if(filteredInput$ | async; as input){
       <ul *ngIf="input.length > 0">
         @for (item of input; track item;) {
-          <li [tabindex]="0" (click)="inputSelected(item)" (keydown)="moveFocus($event, item)">
-            {{item.strDrink}}
+          <li [tabindex]="0" (click)="inputSelected(item)" (keydown)="moveFocus($event, item)" [innerHTML]="item.strDrink | highlightText:textInput">
           </li>
         }
       </ul>
