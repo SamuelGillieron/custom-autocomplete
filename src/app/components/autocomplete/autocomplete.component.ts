@@ -1,6 +1,6 @@
 import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {CocktailServiceService} from '../../shared/services/cocktail-service.service';
-import {debounceTime, fromEvent, Observable, switchMap, tap} from 'rxjs';
+import {combineLatestWith, debounceTime, fromEvent, merge, Observable, Subject, switchMap, tap} from 'rxjs';
 import {Cocktail} from '../../shared/models/cocktail';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AsyncPipe, NgForOf} from '@angular/common';
@@ -24,23 +24,26 @@ export class AutocompleteComponent{
   filteredInput$: Observable<Cocktail[]> = null!;
   inputControl: FormControl;
 
+  internalInputs = new Subject<Cocktail[]>()
+
   @Output()
   selected = new EventEmitter<Cocktail>;
 
-
   constructor(private cocktailService : CocktailServiceService) {
+
     this.inputControl = new FormControl('')
-    this.filteredInput$ = this.inputControl.valueChanges.pipe(
-      debounceTime(300),
+    const internalInputs$ = this.internalInputs.asObservable()
+    const inputChanges$ =this.inputControl.valueChanges.pipe(debounceTime(300),
+      switchMap(e => this.cocktailService.searchCocktail(e)));
+    this.filteredInput$ = merge(internalInputs$,inputChanges$).pipe(
       tap(e => console.log(e)),
-      switchMap(e => this.cocktailService.searchCocktail(e))
     )
   }
 
   inputSelected(i : Cocktail) {
-    console.log(i.strDrink)
+    this.inputControl.setValue(i.strDrink, {emitEvent:false})
+    this.internalInputs.next([])
     this.selected.emit(i)
-
   }
 
   moveFocus(e: any, item: Cocktail) {
