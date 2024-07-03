@@ -1,11 +1,11 @@
 <p>autocomplete works!</p>
 
-  <input [formControl]="inputControl" autocomplete="off" placeholder="{{placeholder}}" type="text" list="autocomplete_options">
+  <input tabindex="0" [formControl]="inputControl" autocomplete="off" placeholder="{{placeholder}}" type="text" list="autocomplete_options">
 
   @if(filteredInput$ | async; as input){
       <ul class="search" id="autocomplete_options" >
         @for (item of input; track item; let  i = $index) {
-          <li [tabindex]="i" (click)="inputSelected(item)" (keydown)="moveFocus($event)">
+          <li [tabindex]="0" (click)="inputSelected(item)" (keydown)="moveFocus($event, item)">
             {{i+1}} {{item.strDrink}}
           </li>
         }

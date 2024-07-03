@@ -43,15 +43,12 @@ export class AutocompleteComponent{
 
   }
 
-  moveFocus(e: any) {
-    console.log("FOCUS",e)
-
+  moveFocus(e: any, item: Cocktail) {
+    console.log("EVENT", e)
+    console.log("Item", item)
     switch(e.key){
-      case "ArrowUp":
-        console.log("Move up")
-        break
-      case "ArrowDown":
-        console.log("Move down")
+      case "Enter":
+        this.inputSelected(item)
         break
     }
 
