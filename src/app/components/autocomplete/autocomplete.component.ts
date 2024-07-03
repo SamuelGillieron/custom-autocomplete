@@ -43,4 +43,17 @@ export class AutocompleteComponent{
 
   }
 
+  moveFocus(e: any) {
+    console.log("FOCUS",e)
+
+    switch(e.key){
+      case "ArrowUp":
+        console.log("Move up")
+        break
+      case "ArrowDown":
+        console.log("Move down")
+        break
+    }
+
+  }
 }
